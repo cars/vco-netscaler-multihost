@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<config-element id="28579a12-924e-48e3-8df8-72011d859250"  version="0.0.1" >
+<display-name><![CDATA[PWStateConfig]]></display-name>
+<atts>
+<att name='APIKey' type='string' read-only='false' ></att>
+<att name='PasswordListID' type='string' read-only='false' ></att>
+<att name='SVCVCO' type='string' read-only='false' ><description><![CDATA[PasswordID of svcvco from VMW pw list]]></description>
+</att>
+</atts>
+</config-element>

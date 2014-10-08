@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Exported from [server]</comment>
+<entry key="categoryPath">Library.Citrix NetScaler</entry>
+<entry key="name">Add Virtual Server to Netscaler</entry>
+<entry key="type">Workflow</entry>
+<entry key="id">056588c6-06e9-4ed1-81c9-a3f4818e9557</entry>
+</properties>
