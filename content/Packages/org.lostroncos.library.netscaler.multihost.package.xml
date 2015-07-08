@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package id="ff8080814e61e7f3014e6d3358071edc">
+<package id="ff8080814e61e7f3014e6d3f950f1ef7">
     <name>org.lostroncos.library.netscaler.multihost</name>
-    <description></description>
+    <description/>
     <workflows>
-        <id-056588c6-06e9-4ed1-81c9-a3f4818e9557 path="Library/Citrix NetScaler/Add Virtual Server to Netscaler.workflow.xml"/>
+        <id-51bc8efb-c447-48fc-b31d-6c703d4d88c8 path="Library/Citrix NetScaler/Add Virtual Server to Netscaler.workflow.xml"/>
+        <id-e0e0674f-52b3-4003-9b76-704ae0a1d045 path="Library/Citrix NetScaler/Invoke a Netscaler REST operation.workflow.xml"/>
     </workflows>
     <actions>
         <id-773ca164-f4ae-42ef-bae4-ee5968947a34 path="org.lostroncos.library.netscaler.multihost/getNSRestOperationByName.action.xml"/>

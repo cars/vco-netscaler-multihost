@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dunes-script-module name="getNSRestOperationByName" result-type="REST:RESTOperation" api-version="3.1.0" id="2580ce55-da03-4dfe-b4bc-bc6297ef6d3d" version="0.0.1" allowed-operations="vef">
+<dunes-script-module name="getNSRestOperationByName" result-type="REST:RESTOperation" api-version="3.1.0" id="773ca164-f4ae-42ef-bae4-ee5968947a34" version="0.0.1" allowed-operations="fve">
     <param n="nsRestHost" t="REST:RESTHost"/>
 
     <param n="nsRestOperationName" t="string"/>

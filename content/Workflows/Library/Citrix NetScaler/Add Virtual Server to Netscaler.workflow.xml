@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="056588c6-06e9-4ed1-81c9-a3f4818e9557" version="0.0.12" api-version="3.1.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="51bc8efb-c447-48fc-b31d-6c703d4d88c8" version="1.1.0" api-version="3.1.0" allowed-operations="fve" restartMode="1" resumeFromFailedMode="0">
     <display-name>Add Virtual Server to Netscaler</display-name>
 
     <position x="100.0" y="50.0"/>
 
     <input>
-        <param name="PasswordID" type="String">
-            <description>PasswordID</description>
-        </param>
         <param name="vserverName" type="string"/>
         <param name="vserverProtocol" type="string"/>
         <param name="vserverIP" type="string"/>
@@ -49,46 +46,40 @@
         </param>
     </output>
 
-    <attrib name="password" type="string" read-only="false">
-        <value encoded="n"/>
-    </attrib>
-    <attrib name="username" type="string" read-only="false">
-        <value encoded="n"/>
-    </attrib>
     <attrib name="content" type="String" read-only="false">
         <value encoded="n"/>
         <description>content</description>
     </attrib>
+    <attrib name="ProtocolArray" type="Array/string" read-only="true">
+        <value encoded="n">#{#string#HTTP#;#string#FTP#;#string#TCP#;#string#UDP#;#string#SSL#;#string#SSL_BRIDGE#;#string#SSL_TCP#;#string#DTLS#;#string#NNTP#;#string#DNS#;#string#DHCPRA#;#string#ANY#;#string#SIP_UDP#;#string#DNS_TCP#;#string#RTSP#;#string#PUSH#;#string#SSL_PUSH#;#string#RADIUS#;#string#RDP#;#string#MYSQL#;#string#MSSQL#;#string#DIAMETER#;#string#SSL_DIAMETER#;#string#TFTP#;#string#ORACLE#}#</value>
+    </attrib>
+    <attrib name="PersistenceTypeArray" type="Array/string" read-only="false">
+        <value encoded="n">#{#string#SOURCEIP#;#string#COOKIEINSERT#;#string#SSLSESSION#;#string#RULE#;#string#URLPASSIVE#;#string#CUSTOMERSERVERID#;#string#DESTIP#;#string#SRCIPDESTIP#;#string#CALLID#;#string#RTSPID#;#string#DIAMETER#;#string#NONE#}#</value>
+    </attrib>
+    <attrib name="LBMethodArray" type="Array/string" read-only="false">
+        <value encoded="n">#{#string#LEASTCONNECTION#;#string#ROUNDROBIN#;#string#LEASTRESPONSETIME#;#string#URLHASH#;#string#DOMAINHASH#;#string#DESTINATIONIPHASH#;#string#SOURCEIPHASH#;#string#SRCIPDESTIPHASH#;#string#CALLIDHASH#;#string#SRCIPSRCPORTHASH#;#string#LEASTBANDWIDTH#;#string#LEASTPACKETS#;#string#CUSTOMLOAD#;#string#TOKEN#;#string#LRTM#}#</value>
+    </attrib>
+    <attrib name="nsRestHost" type="REST:RESTHost" read-only="false">
+        <value encoded="n">__NULL__</value>
+    </attrib>
+    <attrib name="nsRestOperation" type="REST:RESTOperation" read-only="false">
+        <value encoded="n">__NULL__</value>
+    </attrib>
+    <attrib name="nsRestOperationName" type="string" read-only="false">
+        <value encoded="n">NetScaler-Vserver-Add</value>
+    </attrib>
+    <attrib name="nsSSLRestOperationName" type="string" read-only="false">
+        <value encoded="n">NetScaler-SSLServer-Certificate-Binding-Add</value>
+    </attrib>
+    <attrib name="SSLenableContent" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
 
     <workflow-item name="item0" type="end" end-mode="0">
-        <position x="724.5" y="109.04545454545453"/>
+        <position x="924.5" y="199.95454545454544"/>
     </workflow-item>
 
-    <workflow-item name="item1" out-name="item4" type="link" linked-workflow-id="f35412f6-e8ca-489f-929d-54b05ea0370b">
-        <display-name>Get Username and Password from PasswordState</display-name>
-
-        <in-binding>
-            <bind name="PasswordID" type="String" export-name="PasswordID">
-                <description>PasswordID</description>
-            </bind>
-        </in-binding>
-
-        <out-binding>
-            <bind name="statusCode" type="Number" export-name="sslBindingStatusCode">
-                <description>Response status code</description>
-            </bind>
-            <bind name="password" type="string" export-name="password"/>
-            <bind name="username" type="string" export-name="username"/>
-        </out-binding>
-
-        <description>
-Workflow that given a particulat PasswordID from password state will look up the password and username associated with the ID for use in workflows...
-        </description>
-
-        <position x="204.5" y="55.40909090909091"/>
-    </workflow-item>
-
-    <workflow-item name="item3" out-name="item5" type="condition" alt-out-name="item0" comparator="0">
+    <workflow-item name="item3" out-name="item7" type="condition" alt-out-name="item0" comparator="0">
         <display-name>Add SSL Cert</display-name>
 
         <script encoded="false">
@@ -101,72 +92,10 @@ return (doSSL == true) ;
         </in-binding>
         <condition name="doSSL" type="boolean" comparator="0" label="null">false</condition>
 
-        <position x="624.5" y="45.40909090909091"/>
+        <position x="784.5" y="45.40909090909091"/>
     </workflow-item>
 
-    <workflow-item name="item5" out-name="item0" type="link" linked-workflow-id="af095502-c172-4207-9dc8-4f0027811354">
-        <display-name>Netscaler - Bind SSL Cert to vServer</display-name>
-
-        <in-binding>
-            <bind name="nsPassword" type="string" export-name="password"/>
-            <bind name="sslCertKey" type="string" export-name="sslCertKey"/>
-            <bind name="vserverName" type="string" export-name="vserverName"/>
-            <bind name="nsUsername" type="string" export-name="username"/>
-        </in-binding>
-
-        <out-binding>
-            <bind name="statusCode" type="Number" export-name="sslBindingStatusCode">
-                <description>Response status code</description>
-            </bind>
-            <bind name="contentLength" type="Number" export-name="sslBindingContentLength">
-                <description>Response content length</description>
-            </bind>
-            <bind name="headers" type="Properties" export-name="sslBindingHeaders">
-                <description>Response headers</description>
-            </bind>
-            <bind name="contentAsString" type="String" export-name="sslBindingContentAsString">
-                <description>Response content as string</description>
-            </bind>
-        </out-binding>
-
-        <description>Autogenerated workflow. Bind an existing SSL certificate on the Netscaler to a Virtual Server</description>
-
-        <position x="764.5" y="55.40909090909091"/>
-    </workflow-item>
-
-    <workflow-item name="item2" out-name="item3" type="link" linked-workflow-id="e4316507-0988-4aca-9b31-600193b0cefa">
-        <display-name>NetScaler: Vserver Add</display-name>
-
-        <in-binding>
-            <bind name="content" type="String" export-name="content">
-                <description>content</description>
-            </bind>
-            <bind name="nsRestHostName" type="string" export-name="nsRestHostName"/>
-            <bind name="nsUserName" type="string" export-name="username"/>
-            <bind name="nsUserPassword" type="string" export-name="password"/>
-        </in-binding>
-
-        <out-binding>
-            <bind name="statusCode" type="Number" export-name="addServerStatusCode">
-                <description>Response status code</description>
-            </bind>
-            <bind name="contentLength" type="Number" export-name="addServerContentLength">
-                <description>Response content length</description>
-            </bind>
-            <bind name="headers" type="Properties" export-name="addServerHeaders">
-                <description>Response headers</description>
-            </bind>
-            <bind name="contentAsString" type="String" export-name="addServerContentAsString">
-                <description>Response content as string</description>
-            </bind>
-        </out-binding>
-
-        <description>Autogenerated workflow.</description>
-
-        <position x="484.5" y="55.40909090909091"/>
-    </workflow-item>
-
-    <workflow-item name="item4" out-name="item2" type="task">
+    <workflow-item name="item4" out-name="item5" type="task">
         <display-name>Build REST content</display-name>
 
         <script encoded="false">
@@ -189,6 +118,18 @@ if (vserverPersistence !== null &amp;&amp; vserverPersistence.length &gt;=1 ){
 content += '}}';
 
 System.log("content: " + content);
+
+
+
+SSLenableContent = '\
+{\
+"sslvserver_sslcertkey_binding":\
+	{\
+		"vServerName":"'+vserverName+'",\
+		"certKeyName":"'+sslCertKey+'"\
+	}\
+}\
+';
         </script>
 
         <in-binding>
@@ -199,17 +140,136 @@ System.log("content: " + content);
             <bind name="vserverLBMethod" type="string" export-name="vserverLBMethod"/>
             <bind name="vserverPersistence" type="string" export-name="vserverPersistence"/>
             <bind name="vserverComment" type="string" export-name="vserverComment"/>
+            <bind name="sslCertKey" type="string" export-name="sslCertKey"/>
         </in-binding>
 
         <out-binding>
             <bind name="content" type="String" export-name="content">
                 <description>content</description>
             </bind>
+            <bind name="SSLenableContent" type="string" export-name="SSLenableContent"/>
         </out-binding>
 
         <description>Scripting component to build the JSON content for the REST operation.</description>
 
-        <position x="344.5" y="55.40909090909091"/>
+        <position x="484.5" y="55.40909090909091"/>
+    </workflow-item>
+
+    <workflow-item name="item1" out-name="item2" type="task" script-module="org.lostroncos.library.netscaler.multihost/getNSRestHostByName">
+        <display-name>getNSRestHostByName</display-name>
+
+        <script encoded="false">
+//Auto generated script, cannot be modified !
+actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").getNSRestHostByName(nsRestHostName) ;
+        </script>
+
+        <in-binding>
+            <bind name="nsRestHostName" type="string" export-name="nsRestHostName"/>
+        </in-binding>
+
+        <out-binding>
+            <bind name="actionResult" type="REST:RESTHost" export-name="nsRestHost"/>
+        </out-binding>
+
+        <position x="204.5" y="55.40909090909091"/>
+    </workflow-item>
+
+    <workflow-item name="item2" out-name="item4" type="task" script-module="org.lostroncos.library.netscaler.multihost/getNSRestOperationByName">
+        <display-name>getNSRestOperationByName</display-name>
+
+        <script encoded="false">
+//Auto generated script, cannot be modified !
+actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").getNSRestOperationByName(nsRestHost,nsRestOperationName) ;
+        </script>
+
+        <in-binding>
+            <bind name="nsRestHost" type="REST:RESTHost" export-name="nsRestHost"/>
+            <bind name="nsRestOperationName" type="string" export-name="nsRestOperationName"/>
+        </in-binding>
+
+        <out-binding>
+            <bind name="actionResult" type="REST:RESTOperation" export-name="nsRestOperation"/>
+        </out-binding>
+
+        <position x="345.0" y="55.90909090909091"/>
+    </workflow-item>
+
+    <workflow-item name="item5" out-name="item3" type="link" linked-workflow-id="e0e0674f-52b3-4003-9b76-704ae0a1d045">
+        <display-name>Add vServer</display-name>
+
+        <in-binding>
+            <bind name="restOperation" type="REST:RESTOperation" export-name="nsRestOperation"/>
+            <bind name="content" type="String" export-name="content">
+                <description>content</description>
+            </bind>
+        </in-binding>
+
+        <out-binding>
+            <bind name="statusCode" type="Number" explicitly-not-bound="true">
+                <description>Response status code</description>
+            </bind>
+            <bind name="contentLength" type="Number" explicitly-not-bound="true">
+                <description>Response content length</description>
+            </bind>
+            <bind name="headers" type="Properties" explicitly-not-bound="true">
+                <description>Response headers</description>
+            </bind>
+            <bind name="contentAsString" type="String" explicitly-not-bound="true">
+                <description>Response content as string</description>
+            </bind>
+        </out-binding>
+
+        <description>Autogenerated workflow.</description>
+
+        <position x="645.0" y="55.90909090909091"/>
+    </workflow-item>
+
+    <workflow-item name="item6" out-name="item0" type="link" linked-workflow-id="e0e0674f-52b3-4003-9b76-704ae0a1d045">
+        <display-name>Enable SSL</display-name>
+
+        <in-binding>
+            <bind name="restOperation" type="REST:RESTOperation" export-name="nsRestOperation"/>
+            <bind name="content" type="String" export-name="SSLenableContent">
+                <description>content</description>
+            </bind>
+        </in-binding>
+
+        <out-binding>
+            <bind name="statusCode" type="Number" explicitly-not-bound="true">
+                <description>Response status code</description>
+            </bind>
+            <bind name="contentLength" type="Number" explicitly-not-bound="true">
+                <description>Response content length</description>
+            </bind>
+            <bind name="headers" type="Properties" explicitly-not-bound="true">
+                <description>Response headers</description>
+            </bind>
+            <bind name="contentAsString" type="String" explicitly-not-bound="true">
+                <description>Response content as string</description>
+            </bind>
+        </out-binding>
+
+        <position x="1004.5" y="119.04545454545453"/>
+    </workflow-item>
+
+    <workflow-item name="item7" out-name="item6" type="task" script-module="org.lostroncos.library.netscaler.multihost/getNSRestOperationByName">
+        <display-name>getNSRestOperationByName</display-name>
+
+        <script encoded="false">
+//Auto generated script, cannot be modified !
+actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").getNSRestOperationByName(nsRestHost,nsRestOperationName) ;
+        </script>
+
+        <in-binding>
+            <bind name="nsRestHost" type="REST:RESTHost" export-name="nsRestHost"/>
+            <bind name="nsRestOperationName" type="string" export-name="nsSSLRestOperationName"/>
+        </in-binding>
+
+        <out-binding>
+            <bind name="actionResult" type="REST:RESTOperation" export-name="nsRestOperation"/>
+        </out-binding>
+
+        <position x="1004.5" y="55.40909090909091"/>
     </workflow-item>
 
     <presentation>
@@ -222,31 +282,32 @@ VServer Properties
                 </desc>
                 <p-param name="vserverName">
                     <desc>vserverName</desc>
+                    <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
                 </p-param>
                 <p-param name="vserverProtocol">
                     <desc>vserverProtocol</desc>
+                    <p-qual kind="ognl" name="linkedEnumeration" type="Array/string">#ProtocolArray</p-qual>
                 </p-param>
                 <p-param name="vserverIP">
                     <desc>vserverIP</desc>
+                    <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
                 </p-param>
                 <p-param name="vserverPort">
                     <desc>vserverPort</desc>
+                    <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
                 </p-param>
                 <p-param name="vserverLBMethod">
                     <desc>vserverLBMethod</desc>
                     <p-qual kind="static" name="defaultValue" type="string">ROUNDROBIN</p-qual>
+                    <p-qual kind="ognl" name="genericEnumeration" type="Array/string">#LBMethodArray</p-qual>
                 </p-param>
                 <p-param name="vserverPersistence">
                     <desc>vserverPersistence</desc>
+                    <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
+                    <p-qual kind="ognl" name="genericEnumeration" type="Array/string">#PersistenceTypeArray</p-qual>
                 </p-param>
                 <p-param name="vserverComment">
                     <desc>vserverComment</desc>
-                </p-param>
-            </p-group>
-            <p-group>
-                <title>PasswordID properties</title>
-                <p-param name="PasswordID">
-                    <desc>PasswordID</desc>
                 </p-param>
             </p-group>
         </p-step>
@@ -256,14 +317,18 @@ VServer Properties
                 <title>SSL Certificate Information</title>
                 <p-param name="doSSL">
                     <desc>Assign an SSL Certificate</desc>
+                    <p-qual kind="static" name="defaultValue" type="boolean">__NULL__</p-qual>
                 </p-param>
                 <p-param name="sslCertKey">
                     <desc>sslCertKey</desc>
+                    <p-qual kind="ognl" name="visible" type="boolean">#doSSL</p-qual>
+                    <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
                 </p-param>
             </p-group>
         </p-step>
         <p-param name="nsRestHostName">
             <desc>nsRestHostName</desc>
+            <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
         </p-param>
     </presentation>
 </workflow>
