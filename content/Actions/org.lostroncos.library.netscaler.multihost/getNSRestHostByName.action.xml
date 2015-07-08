@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dunes-script-module name="getNSRestHostByName" result-type="REST:RESTHost" api-version="3.1.0" id="ec81760b-21c8-45f6-9069-61c23c7df4ef" version="0.0.1" allowed-operations="fve">
+    <param n="nsRestHostName" t="string"/>
+
+    <script encoded="false">
+//
+// Array of RestHosts
+var arrRestHosts;
+//
+var restHost;
+// Loop variable
+var idx;
+
+
+arrRestHosts = RESTHostManager.getHosts();
+
+for (idx = 0; idx &lt; arrRestHosts.length; idx ++){
+	restHost = RESTHostManager.getHost(arrRestHosts[idx]);
+	if (restHost.name.toLowerCase() == nsRestHostName.toLowerCase()) {
+		return restHost;
+	}
+}
+
+System.error("Couldn't find a RESTHost with name: " + nsRestHostName);
+throw("Couldn't find a RESTHost with name: " + nsRestHostName);
+
+//return null;
+    </script>
+</dunes-script-module>
