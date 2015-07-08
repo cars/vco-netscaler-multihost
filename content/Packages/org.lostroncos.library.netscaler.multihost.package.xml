@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package id="ff8080814e61e7f3014e6d3358071edc">
+    <name>org.lostroncos.library.netscaler.multihost</name>
+    <description></description>
+    <workflows>
+        <id-056588c6-06e9-4ed1-81c9-a3f4818e9557 path="Library/Citrix NetScaler/Add Virtual Server to Netscaler.workflow.xml"/>
+    </workflows>
+    <actions>
+        <id-773ca164-f4ae-42ef-bae4-ee5968947a34 path="org.lostroncos.library.netscaler.multihost/getNSRestOperationByName.action.xml"/>
+        <id-ec81760b-21c8-45f6-9069-61c23c7df4ef path="org.lostroncos.library.netscaler.multihost/getNSRestHostByName.action.xml"/>
+    </actions>
+    <configurations>
+        <id-28579a12-924e-48e3-8df8-72011d859250 path="Library/CSC/PWStateConfig.vsoconf.xml"/>
+    </configurations>
+    <resources>
+        <id-4afb5d17-bdc1-4010-b093-97c91b2c00aa path="Library/HTTP-REST/a21e6779-dbc2-4ccc-8d80-a0da20177812">
+            <name>a21e6779-dbc2-4ccc-8d80-a0da20177812</name>
+            <description>${unpack.pkg.el.resdescr}</description>
+            <mimetype>text/xml</mimetype>
+            <permissions>fve</permissions>
+            <version>0.0.0</version>
+        </id-4afb5d17-bdc1-4010-b093-97c91b2c00aa>
+    </resources>
+</package>
