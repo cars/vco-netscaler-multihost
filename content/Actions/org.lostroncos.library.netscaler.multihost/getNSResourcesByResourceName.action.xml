@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dunes-script-module name="getNSResourcesByResourceName" result-type="Array/string" api-version="3.1.0" id="9f5c576b-b8fc-4736-bcfc-a9568ad7597d" version="1.2.0" allowed-operations="vfe">
+    <param n="nsRestHostName" t="string">Example: nsSandbox</param>
+
+    <param n="nsResourceName" t="string">Example: server</param>
+
+    <param n="nsParameterName" t="string">Example: name</param>
+
+    <param n="nsRecordFilter" t="string">Example: servicetype=HTTP or ""</param>
+
+    <script encoded="false">
+if ((nsRestHostName === "") || (nsResourceName === "") || (nsParameterName === ""))
+	throw "Empty value is not permitted on nsRestHostName, nsResourceName or nsParameterName parameters";
+	
+if (nsRecordFilter != "") {
+	var FilterSplit = nsRecordFilter.split("=");
+	var FilterKey = FilterSplit[0];
+	var FilterValue = FilterSplit[1];
+}
+	
+var nsRestHost = System.getModule("org.lostroncos.library.netscaler.multihost").getNSRestHostByName(nsRestHostName);
+var nsRestOperationName = "NetScaler-"+nsResourceName+"-GetAll";
+var nsRestOperation = System.getModule("org.lostroncos.library.netscaler.multihost").getNSRestOperationByName(nsRestHost,nsRestOperationName);
+nsRestOperation.defaultContentType = "application/json";
+
+var inParamtersValues = [];
+var request = nsRestOperation.createRequest(inParamtersValues,null);
+var response = request.execute();
+
+contentAsString = response.contentAsString;
+var jsonResponse = JSON.parse(contentAsString);
+var jsonArray = jsonResponse[nsResourceName];
+
+var returnArray = new Array();
+for each (var row in jsonArray) {
+	// Filter only requested rows
+	if (FilterValue != "") {
+		if (row[FilterKey] === FilterValue)
+			returnArray.push(row[nsParameterName]);
+	} else {
+		returnArray.push(row[nsParameterName]);
+	}
+}
+
+return returnArray;
+    </script>
+</dunes-script-module>
