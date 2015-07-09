@@ -3,11 +3,19 @@
     <name>org.lostroncos.library.netscaler.multihost</name>
     <description/>
     <workflows>
-        <id-51bc8efb-c447-48fc-b31d-6c703d4d88c8 path="Library/Citrix NetScaler/Add Virtual Server to Netscaler.workflow.xml"/>
+        <id-126e2149-d50e-40fa-8b08-cf8a85dc88f0 path="Library/Citrix NetScaler/Load Balancing/Create a load balancing virtual server.workflow.xml"/>
+        <id-1b637950-0645-4572-9e79-976c0000cd02 path="Library/Citrix NetScaler/Load Balancing/Bind service to load balancing virtual server.workflow.xml"/>
+        <id-1d79a4ab-0658-406c-a582-4500d3d100cb path="Library/Citrix NetScaler/Content Switching/Bind policy to content switch virtual server.workflow.xml"/>
+        <id-81ffef89-f618-4c85-8a1e-13c875deb02a path="Library/Citrix NetScaler/Load Balancing/Create a load balancing server.workflow.xml"/>
+        <id-d826230b-f90a-4e42-9370-759f13bfdba1 path="Library/Citrix NetScaler/Load Balancing/Bind certificate to load balancing virtual server.workflow.xml"/>
         <id-e0e0674f-52b3-4003-9b76-704ae0a1d045 path="Library/Citrix NetScaler/Invoke a Netscaler REST operation.workflow.xml"/>
+        <id-f59c94b6-b9d0-475e-a178-fd4a5bea8c84 path="Library/Citrix NetScaler/Content Switching/Create a content switching policy.workflow.xml"/>
+        <id-f9e29302-85b8-4b4e-af03-dce1ac88a089 path="Library/Citrix NetScaler/Load Balancing/Create a load balancing service.workflow.xml"/>
     </workflows>
     <actions>
+        <id-6a3c49dd-9709-4527-a7a9-f4ff3f9e236c path="org.lostroncos.library.netscaler.multihost/generateNSRestContent.action.xml"/>
         <id-773ca164-f4ae-42ef-bae4-ee5968947a34 path="org.lostroncos.library.netscaler.multihost/getNSRestOperationByName.action.xml"/>
+        <id-9f5c576b-b8fc-4736-bcfc-a9568ad7597d path="org.lostroncos.library.netscaler.multihost/getNSResourcesByResourceName.action.xml"/>
         <id-ec81760b-21c8-45f6-9069-61c23c7df4ef path="org.lostroncos.library.netscaler.multihost/getNSRestHostByName.action.xml"/>
     </actions>
     <configurations>

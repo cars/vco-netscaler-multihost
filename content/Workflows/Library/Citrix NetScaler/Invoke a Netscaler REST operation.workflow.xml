@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item3" object-name="workflow:name=generic" id="e0e0674f-52b3-4003-9b76-704ae0a1d045" version="1.0.0" api-version="3.1.0" allowed-operations="fve" restartMode="1" resumeFromFailedMode="0">
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item3" object-name="workflow:name=generic" id="e0e0674f-52b3-4003-9b76-704ae0a1d045" version="1.1.0" api-version="3.1.0" allowed-operations="fve" restartMode="1" resumeFromFailedMode="0">
     <display-name>Invoke a Netscaler REST operation</display-name>
 
     <position x="160.0" y="50.0"/>
 
     <input>
-        <param name="restOperation" type="REST:RESTOperation"/>
-        <param name="content" type="String">
+        <param name="nsRestOperation" type="REST:RESTOperation"/>
+        <param name="nsRestContent" type="String">
             <description>content</description>
         </param>
     </input>
@@ -63,7 +63,7 @@ if ( statusCodeAttribute &gt;= 400 ) {
         <script encoded="false">
 //prepare request
 var inParamtersValues = [];
-var request = restOperation.createRequest(inParamtersValues, content);
+var request = nsRestOperation.createRequest(inParamtersValues, nsRestContent);
 //set the request content type
 System.log("Request: " + request);
 System.log("Request URL: " + request.fullUrl);
@@ -82,9 +82,9 @@ System.log("Content as string: " + contentAsString);
         </script>
 
         <in-binding>
-            <bind name="content" type="String" export-name="content"/>
-            <bind name="restOperation" type="REST:RESTOperation" export-name="restOperation"/>
             <bind name="statusCodeAttribute" type="Number" export-name="statusCodeAttribute"/>
+            <bind name="nsRestOperation" type="REST:RESTOperation" export-name="nsRestOperation"/>
+            <bind name="nsRestContent" type="String" export-name="nsRestContent"/>
         </in-binding>
 
         <out-binding>
@@ -104,12 +104,12 @@ System.log("Content as string: " + contentAsString);
         </p-step>
         <p-group>
             <title>Request content</title>
-            <p-param name="content">
+            <p-param name="nsRestContent">
                 <desc>content</desc>
                 <p-qual kind="static" name="textInput" type="void"/>
             </p-param>
         </p-group>
-        <p-param name="restOperation">
+        <p-param name="nsRestOperation">
             <desc>restOperation</desc>
         </p-param>
     </presentation>
