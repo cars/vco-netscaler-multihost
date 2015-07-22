@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dunes-script-module name="generateNSRestContent" result-type="string" api-version="3.1.0" id="6a3c49dd-9709-4527-a7a9-f4ff3f9e236c" version="1.3.0" allowed-operations="vfe">
+    <description>Queries all input parameters with value from workflow and generates JSON formated REST content from them.</description>
+
+    <param n="nsResourceName" t="string">Netscaler resource type</param>
+
+    <script encoded="false">
+if (nsResourceName ==="")
+	throw '"nsResource" value is required';
+
+// Generate XML document where root element is Netscaler resource type
+var xml = XMLManager.newDocument();
+var resource = xml.createElement(nsResourceName);
+
+// Loop through Input parameters and include non-empty values to XML
+var InParams = workflow.getInputParameters();
+var keys = InParams.keys;
+for (var i in keys) {
+	var Key = keys[i];
+	var Value = InParams.get(Key)
+
+	// Skip attributes with empty value and attributes with "ns" prefix
+	if ((Value != "") &amp;&amp; (Key.substring(0,2) != "ns") ) 
+		resource.setAttribute(Key, Value);
+}
+
+// Print XML content
+xml.appendChild(resource);
+var xmlContentAsString = XMLManager.getDocumentContent(xml);
+
+// Convet XML content to JSON
+var json = RESTUtils.xml2json(xmlContentAsString);
+System.log("generateNSRestContent - REST content: "+json);
+
+return json;
+    </script>
+</dunes-script-module>

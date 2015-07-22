@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dunes-script-module name="getNSRestOperationByName" result-type="REST:RESTOperation" api-version="3.1.0" id="773ca164-f4ae-42ef-bae4-ee5968947a34" version="0.1.0" allowed-operations="fve">
+    <param n="nsRestHost" t="REST:RESTHost"/>
+
+    <param n="nsRestOperationName" t="string"/>
+
+    <script encoded="false">
+//
+// Array of RestHosts
+var arrRestOperations;
+//
+var restOperation;
+// Loop variable
+var idx;
+
+
+arrRestOperations = nsRestHost.getOperations();
+
+for (idx = 0; idx &lt; arrRestOperations.length; idx ++){
+	restOperation = nsRestHost.getOperation(arrRestOperations[idx]);
+	if (restOperation.name.toLowerCase() == nsRestOperationName.toLowerCase()) {
+		return restOperation;
+	}
+}
+
+System.error("getNSRestOperationByName - Could not find a RESTOperation with name: [" + nsRestOperationName + "] on host "+ nsRestHost.name );
+throw("getNSRestOperationByName - Could not find a RESTOperation with name: [" + nsRestOperationName + "] on host "+ nsRestHost.name );
+
+//return null;
+    </script>
+</dunes-script-module>

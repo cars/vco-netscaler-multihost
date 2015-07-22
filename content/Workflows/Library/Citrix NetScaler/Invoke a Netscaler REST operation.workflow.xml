@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item3" object-name="workflow:name=generic" id="e0e0674f-52b3-4003-9b76-704ae0a1d045" version="1.1.0" api-version="3.1.0" allowed-operations="fve" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Invoke a Netscaler REST operation</display-name>
+
+    <position x="160.0" y="50.0"/>
+
+    <input>
+        <param name="nsRestOperation" type="REST:RESTOperation"/>
+        <param name="nsRestContent" type="String">
+            <description>content</description>
+        </param>
+    </input>
+
+    <output>
+        <param name="statusCode" type="Number">
+            <description>Response status code</description>
+        </param>
+        <param name="contentLength" type="Number">
+            <description>Response content length</description>
+        </param>
+        <param name="headers" type="Properties">
+            <description>Response headers</description>
+        </param>
+        <param name="contentAsString" type="String">
+            <description>Response content as string</description>
+        </param>
+    </output>
+
+    <attrib name="errorCode" type="String" read-only="false">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="statusCodeAttribute" type="Number" read-only="false"/>
+
+    <workflow-item name="item0" type="end" end-mode="0">
+        <position x="160.0" y="230.0"/>
+    </workflow-item>
+
+    <workflow-item name="item1" throw-bind-name="errorCode" type="end" end-mode="1">
+        <position x="260.0" y="170.0"/>
+    </workflow-item>
+
+    <workflow-item name="item2" out-name="item0" throw-bind-name="errorCode" type="custom-condition" alt-out-name="item1">
+        <display-name>Custom Condition</display-name>
+
+        <script encoded="false">
+if ( statusCodeAttribute &gt;= 400 ) {
+    throw "HTTPError: status code: " + statusCodeAttribute;
+} else {
+    return true;
+}
+        </script>
+
+        <in-binding>
+            <bind name="statusCodeAttribute" type="Number" export-name="statusCodeAttribute"/>
+        </in-binding>
+
+        <position x="120.0" y="170.0"/>
+    </workflow-item>
+
+    <workflow-item name="item3" out-name="item2" catch-name="item1" throw-bind-name="errorCode" type="task">
+        <display-name>Scripting</display-name>
+
+        <script encoded="false">
+//prepare request
+var inParamtersValues = [];
+var request = nsRestOperation.createRequest(inParamtersValues, nsRestContent);
+//set the request content type
+System.log("Request: " + request);
+System.log("Request URL: " + request.fullUrl);
+
+//execute request
+var response = request.execute();
+//prepare output parameters
+System.log("Response: " + response);
+statusCode = response.statusCode;
+statusCodeAttribute = statusCode;
+System.log("Status code: " + statusCode);
+contentLength = response.contentLength;
+headers = response.getAllHeaders();
+contentAsString = response.contentAsString;
+System.log("Content as string: " + contentAsString);
+        </script>
+
+        <in-binding>
+            <bind name="statusCodeAttribute" type="Number" export-name="statusCodeAttribute"/>
+            <bind name="nsRestOperation" type="REST:RESTOperation" export-name="nsRestOperation"/>
+            <bind name="nsRestContent" type="String" export-name="nsRestContent"/>
+        </in-binding>
+
+        <out-binding>
+            <bind name="statusCode" type="Number" export-name="statusCode"/>
+            <bind name="contentLength" type="Number" export-name="contentLength"/>
+            <bind name="headers" type="Properties" export-name="headers"/>
+            <bind name="contentAsString" type="String" export-name="contentAsString"/>
+            <bind name="statusCodeAttribute" type="Number" export-name="statusCodeAttribute"/>
+        </out-binding>
+
+        <position x="120.0" y="120.0"/>
+    </workflow-item>
+
+    <presentation>
+        <p-step>
+            <title>NetScaler: Vserver Add</title>
+        </p-step>
+        <p-group>
+            <title>Request content</title>
+            <p-param name="nsRestContent">
+                <desc>content</desc>
+                <p-qual kind="static" name="textInput" type="void"/>
+            </p-param>
+        </p-group>
+        <p-param name="nsRestOperation">
+            <desc>restOperation</desc>
+        </p-param>
+    </presentation>
+</workflow>
