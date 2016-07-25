@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="f9e29302-85b8-4b4e-af03-dce1ac88a089" version="3.1.0" api-version="3.1.0" allowed-operations="fve" restartMode="1" resumeFromFailedMode="0">
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="e43cb3d3-d07d-45fb-bb17-de35640013da" version="3.2.0" api-version="6.0.0" allowed-operations="fve" restartMode="1" resumeFromFailedMode="0">
     <display-name>Create a load balancing service</display-name>
 
     <position x="100.0" y="50.0"/>
@@ -9,12 +9,12 @@
             <description>Netscaler Name</description>
         </param>
         <param name="name" type="string">
-            <description>Sertvice Name</description>
+            <description>Service Name</description>
         </param>
         <param name="nsUseExistingServer" type="boolean">
             <description>Use existing server</description>
         </param>
-        <param name="ipv46" type="string">
+        <param name="IP" type="string">
             <description>IP Address</description>
         </param>
         <param name="servername" type="string">
@@ -25,6 +25,12 @@
         </param>
         <param name="port" type="string">
             <description>Port</description>
+        </param>
+        <param name="nsCIP" type="boolean">
+            <description>Insert Client IP Address</description>
+        </param>
+        <param name="cipheader" type="string">
+            <description>Client IP header</description>
         </param>
     </input>
 
@@ -54,9 +60,12 @@
         <value encoded="n"/>
         <description>Netscaler REST call content</description>
     </attrib>
+    <attrib name="cip" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
 
     <workflow-item name="item0" type="end" end-mode="0">
-        <position x="884.5" y="45.40909090909091"/>
+        <position x="904.5" y="45.40909090909091"/>
     </workflow-item>
 
     <workflow-item name="item1" out-name="item2" type="task" script-module="org.lostroncos.library.netscaler.multihost/getNSRestHostByName">
@@ -78,7 +87,7 @@ actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").ge
         <position x="204.5" y="55.40909090909091"/>
     </workflow-item>
 
-    <workflow-item name="item2" out-name="item4" type="task" script-module="org.lostroncos.library.netscaler.multihost/getNSRestOperationByName">
+    <workflow-item name="item2" out-name="item5" type="task" script-module="org.lostroncos.library.netscaler.multihost/getNSRestOperationByName">
         <display-name>getNSRestOperationByName</display-name>
 
         <script encoded="false">
@@ -123,7 +132,7 @@ actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").ge
             </bind>
         </out-binding>
 
-        <position x="685.0" y="55.90909090909091"/>
+        <position x="764.5" y="55.40909090909091"/>
     </workflow-item>
 
     <workflow-item name="item4" out-name="item3" type="task" script-module="org.lostroncos.library.netscaler.multihost/generateNSRestContent">
@@ -146,7 +155,29 @@ actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").ge
 
         <description>Queries all input parameters with value from workflow and generates JSON formated REST content from them.</description>
 
-        <position x="505.0" y="55.90909090909091"/>
+        <position x="624.5" y="55.40909090909091"/>
+    </workflow-item>
+
+    <workflow-item name="item5" out-name="item4" type="task">
+        <display-name>CIP parameters</display-name>
+
+        <script encoded="false">
+if (nsCIP === true) {
+	cip = "ENABLED";
+} else {
+	cip = "DISABLED";
+}
+        </script>
+
+        <in-binding>
+            <bind name="nsCIP" type="boolean" export-name="nsCIP"/>
+        </in-binding>
+
+        <out-binding>
+            <bind name="cip" type="string" export-name="cip"/>
+        </out-binding>
+
+        <position x="484.5" y="55.40909090909091"/>
     </workflow-item>
 
     <presentation>
@@ -156,13 +187,13 @@ actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").ge
             <p-qual kind="static" name="defaultValue" type="string">nsSandbox</p-qual>
         </p-param>
         <p-param name="name">
-            <desc>Name</desc>
+            <desc>Service Name</desc>
             <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
         </p-param>
         <p-param name="nsUseExistingServer">
             <desc>Use existing server</desc>
         </p-param>
-        <p-param name="ipv46">
+        <p-param name="IP">
             <desc>IP Address</desc>
             <p-qual kind="ognl" name="visible" type="boolean">(#nsUseExistingServer == 0)</p-qual>
             <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
@@ -172,6 +203,7 @@ actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").ge
             <p-qual kind="ognl" name="visible" type="boolean">(#nsUseExistingServer == 1)</p-qual>
             <p-qual kind="ognl" name="genericEnumeration" type="Array/string">GetAction("org.lostroncos.library.netscaler.multihost","getNSResourcesByResourceName").call( #nsRestHostName , "server" , "name" , "" )</p-qual>
             <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
+            <p-qual kind="static" name="defaultValue" type="string"/>
         </p-param>
         <p-param name="servicetype">
             <desc>Protocol</desc>
@@ -183,6 +215,14 @@ actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").ge
             <desc>Port</desc>
             <p-qual kind="static" name="defaultValue" type="string">443</p-qual>
             <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
+        </p-param>
+        <p-param name="nsCIP">
+            <desc>Insert Client IP Address</desc>
+            <p-qual kind="static" name="defaultValue" type="boolean">__NULL__</p-qual>
+        </p-param>
+        <p-param name="cipheader">
+            <desc>Client IP header</desc>
+            <p-qual kind="ognl" name="visible" type="boolean">(#nsCIP == true)</p-qual>
         </p-param>
     </presentation>
 </workflow>
