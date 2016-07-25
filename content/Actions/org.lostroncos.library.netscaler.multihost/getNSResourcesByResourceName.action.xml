@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dunes-script-module name="getNSResourcesByResourceName" result-type="Array/string" api-version="3.1.0" id="9f5c576b-b8fc-4736-bcfc-a9568ad7597d" version="1.2.0" allowed-operations="vfe">
+<dunes-script-module name="getNSResourcesByResourceName" result-type="Array/string" api-version="6.0.0" id="9f5c576b-b8fc-4736-bcfc-a9568ad7597d" version="1.4.0" allowed-operations="vfe">
     <param n="nsRestHostName" t="string">Example: nsSandbox</param>
 
     <param n="nsResourceName" t="string">Example: server</param>
@@ -32,6 +32,7 @@ var jsonResponse = JSON.parse(contentAsString);
 var jsonArray = jsonResponse[nsResourceName];
 
 var returnArray = new Array();
+returnArray.push(""); // Use empty value as default. Needed to get empty value to hidden fields.
 for each (var row in jsonArray) {
 	// Filter only requested rows
 	if (FilterValue != "") {
@@ -42,6 +43,6 @@ for each (var row in jsonArray) {
 	}
 }
 
-return returnArray;
+return returnArray.sort();
     </script>
 </dunes-script-module>

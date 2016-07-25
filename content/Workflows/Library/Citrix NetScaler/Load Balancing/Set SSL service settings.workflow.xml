@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="e43cb3d3-d07d-45fb-bb17-de35640013da" version="3.2.0" api-version="6.0.0" allowed-operations="fve" restartMode="1" resumeFromFailedMode="0">
-    <display-name>Create a load balancing service</display-name>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="a9ba7062-e3fc-4ca6-9c9e-0a60003feb28" version="1.1.1" api-version="6.0.0" allowed-operations="fve" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Set SSL service settings</display-name>
 
     <position x="100.0" y="50.0"/>
 
@@ -8,41 +8,26 @@
         <param name="nsRestHostName" type="string">
             <description>Netscaler Name</description>
         </param>
-        <param name="name" type="string">
+        <param name="servicename" type="string">
             <description>Service Name</description>
         </param>
-        <param name="nsUseExistingServer" type="boolean">
-            <description>Use existing server</description>
+        <param name="nsSSL2" type="boolean">
+            <description>SSLv2</description>
         </param>
-        <param name="IP" type="string">
-            <description>IP Address</description>
+        <param name="nsSSL3" type="boolean">
+            <description>SSLv3</description>
         </param>
-        <param name="servername" type="string">
-            <description>Server</description>
+        <param name="nsTLS1" type="boolean">
+            <description>TLSv1</description>
         </param>
-        <param name="servicetype" type="string">
-            <description>Protocol</description>
+        <param name="nsTLS11" type="boolean">
+            <description>TLSv11</description>
         </param>
-        <param name="port" type="string">
-            <description>Port</description>
-        </param>
-        <param name="nsCIP" type="boolean">
-            <description>Insert Client IP Address</description>
-        </param>
-        <param name="cipheader" type="string">
-            <description>Client IP header</description>
+        <param name="nsTLS12" type="boolean">
+            <description>TLSv12</description>
         </param>
     </input>
 
-    <attrib name="ProtocolArray" type="Array/string" read-only="false">
-        <value encoded="n">#{#string#HTTP#;#string#FTP#;#string#TCP#;#string#UDP#;#string#SSL#;#string#SSL_BRIDGE#;#string#SSL_TCP#;#string#DTLS#;#string#NNTP#;#string#DNS#;#string#DHCPRA#;#string#ANY#;#string#SIP_UDP#;#string#DNS_TCP#;#string#RTSP#;#string#PUSH#;#string#SSL_PUSH#;#string#RADIUS#;#string#RDP#;#string#MYSQL#;#string#MSSQL#;#string#DIAMETER#;#string#SSL_DIAMETER#;#string#TFTP#;#string#ORACLE#}#</value>
-    </attrib>
-    <attrib name="PersistenceTypeArray" type="Array/string" read-only="false">
-        <value encoded="n">#{#string##;#string#SOURCEIP#;#string#COOKIEINSERT#;#string#SSLSESSION#;#string#RULE#;#string#URLPASSIVE#;#string#CUSTOMERSERVERID#;#string#DESTIP#;#string#SRCIPDESTIP#;#string#CALLID#;#string#RTSPID#;#string#DIAMETER#;#string#NONE#}#</value>
-    </attrib>
-    <attrib name="LBMethodArray" type="Array/string" read-only="false">
-        <value encoded="n">#{#string##;#string#LEASTCONNECTION#;#string#ROUNDROBIN#;#string#LEASTRESPONSETIME#;#string#URLHASH#;#string#DOMAINHASH#;#string#DESTINATIONIPHASH#;#string#SOURCEIPHASH#;#string#SRCIPDESTIPHASH#;#string#CALLIDHASH#;#string#SRCIPSRCPORTHASH#;#string#LEASTBANDWIDTH#;#string#LEASTPACKETS#;#string#CUSTOMLOAD#;#string#TOKEN#;#string#LRTM#}#</value>
-    </attrib>
     <attrib name="nsRestHost" type="REST:RESTHost" read-only="false">
         <value encoded="n">__NULL__</value>
     </attrib>
@@ -50,17 +35,29 @@
         <value encoded="n">__NULL__</value>
     </attrib>
     <attrib name="nsRestOperationName" type="string" read-only="false">
-        <value encoded="n">NetScaler-Service-Add</value>
+        <value encoded="n">NetScaler-SSLService-Update</value>
     </attrib>
     <attrib name="nsResourceName" type="string" read-only="false">
-        <value encoded="n">service</value>
+        <value encoded="n">sslservice</value>
         <description>Netscaler resource type</description>
     </attrib>
     <attrib name="nsRestContent" type="string" read-only="false">
         <value encoded="n"/>
         <description>Netscaler REST call content</description>
     </attrib>
-    <attrib name="cip" type="string" read-only="false">
+    <attrib name="ssl2" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="ssl3" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="tls1" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="tls11" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="tls12" type="string" read-only="false">
         <value encoded="n"/>
     </attrib>
 
@@ -118,16 +115,16 @@ actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").ge
         </in-binding>
 
         <out-binding>
-            <bind name="statusCode" type="Number">
+            <bind name="statusCode" type="Number" explicitly-not-bound="true" export-name="NULL">
                 <description>Response status code</description>
             </bind>
-            <bind name="contentLength" type="Number">
+            <bind name="contentLength" type="Number" explicitly-not-bound="true" export-name="NULL">
                 <description>Response content length</description>
             </bind>
-            <bind name="headers" type="Properties">
+            <bind name="headers" type="Properties" explicitly-not-bound="true" export-name="NULL">
                 <description>Response headers</description>
             </bind>
-            <bind name="contentAsString" type="String">
+            <bind name="contentAsString" type="String" explicitly-not-bound="true" export-name="NULL">
                 <description>Response content as string</description>
             </bind>
         </out-binding>
@@ -159,22 +156,49 @@ actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").ge
     </workflow-item>
 
     <workflow-item name="item5" out-name="item4" type="task">
-        <display-name>CIP parameters</display-name>
+        <display-name>Convert boolean inputs to string</display-name>
 
         <script encoded="false">
-if (nsCIP === true) {
-	cip = "ENABLED";
-} else {
-	cip = "DISABLED";
-}
+if (nsSSL2 === true)
+	ssl2 = "ENABLED";
+else
+	ssl2 = "DISABLED";
+	
+if (nsSSL3 === true)
+	ssl3 = "ENABLED";
+else
+	ssl3 = "DISABLED";
+	
+if (nsTLS1 === true)
+	tls1 = "ENABLED";
+else
+	tls1 = "DISABLED";
+	
+if (nsTLS11 === true)
+	tls11 = "ENABLED";
+else
+	tls11 = "DISABLED";
+	
+if (nsTLS12 === true)
+	tls12 = "ENABLED";
+else
+	tls12 = "DISABLED";
         </script>
 
         <in-binding>
-            <bind name="nsCIP" type="boolean" export-name="nsCIP"/>
+            <bind name="nsSSL2" type="boolean" export-name="nsSSL2"/>
+            <bind name="nsSSL3" type="boolean" export-name="nsSSL3"/>
+            <bind name="nsTLS1" type="boolean" export-name="nsTLS1"/>
+            <bind name="nsTLS11" type="boolean" export-name="nsTLS11"/>
+            <bind name="nsTLS12" type="boolean" export-name="nsTLS12"/>
         </in-binding>
 
         <out-binding>
-            <bind name="cip" type="string" export-name="cip"/>
+            <bind name="ssl2" type="string" export-name="ssl2"/>
+            <bind name="ssl3" type="string" export-name="ssl3"/>
+            <bind name="tls1" type="string" export-name="tls1"/>
+            <bind name="tls11" type="string" export-name="tls11"/>
+            <bind name="tls12" type="string" export-name="tls12"/>
         </out-binding>
 
         <position x="484.5" y="55.40909090909091"/>
@@ -186,43 +210,30 @@ if (nsCIP === true) {
             <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
             <p-qual kind="static" name="defaultValue" type="string">nsSandbox</p-qual>
         </p-param>
-        <p-param name="name">
+        <p-param name="servicename">
             <desc>Service Name</desc>
             <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
+            <p-qual kind="ognl" name="linkedEnumeration" type="Array/string">GetAction("org.lostroncos.library.netscaler.multihost","getNSResourcesByResourceName").call( #nsRestHostName , "service" , "name" , "" )</p-qual>
         </p-param>
-        <p-param name="nsUseExistingServer">
-            <desc>Use existing server</desc>
-        </p-param>
-        <p-param name="IP">
-            <desc>IP Address</desc>
-            <p-qual kind="ognl" name="visible" type="boolean">(#nsUseExistingServer == 0)</p-qual>
-            <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
-        </p-param>
-        <p-param name="servername">
-            <desc>Server</desc>
-            <p-qual kind="ognl" name="visible" type="boolean">(#nsUseExistingServer == 1)</p-qual>
-            <p-qual kind="ognl" name="genericEnumeration" type="Array/string">GetAction("org.lostroncos.library.netscaler.multihost","getNSResourcesByResourceName").call( #nsRestHostName , "server" , "name" , "" )</p-qual>
-            <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
-            <p-qual kind="static" name="defaultValue" type="string"/>
-        </p-param>
-        <p-param name="servicetype">
-            <desc>Protocol</desc>
-            <p-qual kind="ognl" name="linkedEnumeration" type="Array/string">#ProtocolArray</p-qual>
-            <p-qual kind="static" name="defaultValue" type="string">SSL</p-qual>
-            <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
-        </p-param>
-        <p-param name="port">
-            <desc>Port</desc>
-            <p-qual kind="static" name="defaultValue" type="string">443</p-qual>
-            <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
-        </p-param>
-        <p-param name="nsCIP">
-            <desc>Insert Client IP Address</desc>
+        <p-param name="nsSSL2">
+            <desc>SSLv2</desc>
             <p-qual kind="static" name="defaultValue" type="boolean">__NULL__</p-qual>
         </p-param>
-        <p-param name="cipheader">
-            <desc>Client IP header</desc>
-            <p-qual kind="ognl" name="visible" type="boolean">(#nsCIP == true)</p-qual>
+        <p-param name="nsSSL3">
+            <desc>SSLv3</desc>
+            <p-qual kind="static" name="defaultValue" type="boolean">__NULL__</p-qual>
+        </p-param>
+        <p-param name="nsTLS1">
+            <desc>TLSv1</desc>
+            <p-qual kind="static" name="defaultValue" type="boolean">true</p-qual>
+        </p-param>
+        <p-param name="nsTLS11">
+            <desc>TLSv11</desc>
+            <p-qual kind="static" name="defaultValue" type="boolean">true</p-qual>
+        </p-param>
+        <p-param name="nsTLS12">
+            <desc>TLSv12</desc>
+            <p-qual kind="static" name="defaultValue" type="boolean">__NULL__</p-qual>
         </p-param>
     </presentation>
 </workflow>

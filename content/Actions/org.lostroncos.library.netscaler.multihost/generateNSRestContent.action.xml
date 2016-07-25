@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dunes-script-module name="generateNSRestContent" result-type="string" api-version="3.1.0" id="6a3c49dd-9709-4527-a7a9-f4ff3f9e236c" version="1.3.0" allowed-operations="vfe">
+<dunes-script-module name="generateNSRestContent" result-type="string" api-version="6.0.0" id="6a3c49dd-9709-4527-a7a9-f4ff3f9e236c" version="1.5.2" allowed-operations="vfe">
     <description>Queries all input parameters with value from workflow and generates JSON formated REST content from them.</description>
 
     <param n="nsResourceName" t="string">Netscaler resource type</param>
@@ -22,6 +22,18 @@ for (var i in keys) {
 	// Skip attributes with empty value and attributes with "ns" prefix
 	if ((Value != "") &amp;&amp; (Key.substring(0,2) != "ns") ) 
 		resource.setAttribute(Key, Value);
+}
+
+// Loop through variables and include non-empty values to XML
+var Variables = workflow.getAttributes();
+var VarKeys = Variables.keys;
+for (var i in VarKeys) {
+	var VarKey = VarKeys[i];
+	var VarValue = Variables.get(VarKey)
+
+	// Skip attributes with empty value and attributes with "ns" prefix and internal attributes
+	if ((VarValue != "") &amp;&amp; (VarKey.substring(0,2) != "ns") &amp;&amp; (VarKey != "PersistenceTypeArray") &amp;&amp; (VarKey != "ProtocolArray") &amp;&amp; (VarKey != "LBMethodArray")) 
+		resource.setAttribute(VarKey, VarValue);
 }
 
 // Print XML content
