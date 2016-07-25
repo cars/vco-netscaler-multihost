@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="a9ba7062-e3fc-4ca6-9c9e-0a60003feb28" version="1.1.1" api-version="6.0.0" allowed-operations="fve" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Set SSL service settings</display-name>
+
+    <position x="100.0" y="50.0"/>
+
+    <input>
+        <param name="nsRestHostName" type="string">
+            <description>Netscaler Name</description>
+        </param>
+        <param name="servicename" type="string">
+            <description>Service Name</description>
+        </param>
+        <param name="nsSSL2" type="boolean">
+            <description>SSLv2</description>
+        </param>
+        <param name="nsSSL3" type="boolean">
+            <description>SSLv3</description>
+        </param>
+        <param name="nsTLS1" type="boolean">
+            <description>TLSv1</description>
+        </param>
+        <param name="nsTLS11" type="boolean">
+            <description>TLSv11</description>
+        </param>
+        <param name="nsTLS12" type="boolean">
+            <description>TLSv12</description>
+        </param>
+    </input>
+
+    <attrib name="nsRestHost" type="REST:RESTHost" read-only="false">
+        <value encoded="n">__NULL__</value>
+    </attrib>
+    <attrib name="nsRestOperation" type="REST:RESTOperation" read-only="false">
+        <value encoded="n">__NULL__</value>
+    </attrib>
+    <attrib name="nsRestOperationName" type="string" read-only="false">
+        <value encoded="n">NetScaler-SSLService-Update</value>
+    </attrib>
+    <attrib name="nsResourceName" type="string" read-only="false">
+        <value encoded="n">sslservice</value>
+        <description>Netscaler resource type</description>
+    </attrib>
+    <attrib name="nsRestContent" type="string" read-only="false">
+        <value encoded="n"/>
+        <description>Netscaler REST call content</description>
+    </attrib>
+    <attrib name="ssl2" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="ssl3" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="tls1" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="tls11" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="tls12" type="string" read-only="false">
+        <value encoded="n"/>
+    </attrib>
+
+    <workflow-item name="item0" type="end" end-mode="0">
+        <position x="904.5" y="45.40909090909091"/>
+    </workflow-item>
+
+    <workflow-item name="item1" out-name="item2" type="task" script-module="org.lostroncos.library.netscaler.multihost/getNSRestHostByName">
+        <display-name>getNSRestHostByName</display-name>
+
+        <script encoded="false">
+//Auto generated script, cannot be modified !
+actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").getNSRestHostByName(nsRestHostName) ;
+        </script>
+
+        <in-binding>
+            <bind name="nsRestHostName" type="string" export-name="nsRestHostName"/>
+        </in-binding>
+
+        <out-binding>
+            <bind name="actionResult" type="REST:RESTHost" export-name="nsRestHost"/>
+        </out-binding>
+
+        <position x="204.5" y="55.40909090909091"/>
+    </workflow-item>
+
+    <workflow-item name="item2" out-name="item5" type="task" script-module="org.lostroncos.library.netscaler.multihost/getNSRestOperationByName">
+        <display-name>getNSRestOperationByName</display-name>
+
+        <script encoded="false">
+//Auto generated script, cannot be modified !
+actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").getNSRestOperationByName(nsRestHost,nsRestOperationName) ;
+        </script>
+
+        <in-binding>
+            <bind name="nsRestHost" type="REST:RESTHost" export-name="nsRestHost"/>
+            <bind name="nsRestOperationName" type="string" export-name="nsRestOperationName"/>
+        </in-binding>
+
+        <out-binding>
+            <bind name="actionResult" type="REST:RESTOperation" export-name="nsRestOperation"/>
+        </out-binding>
+
+        <position x="345.0" y="55.90909090909091"/>
+    </workflow-item>
+
+    <workflow-item name="item3" out-name="item0" type="link" linked-workflow-id="e0e0674f-52b3-4003-9b76-704ae0a1d045">
+        <display-name>Invoke a Netscaler REST operation</display-name>
+
+        <in-binding>
+            <bind name="nsRestOperation" type="REST:RESTOperation" export-name="nsRestOperation"/>
+            <bind name="nsRestContent" type="String" export-name="nsRestContent">
+                <description>content</description>
+            </bind>
+        </in-binding>
+
+        <out-binding>
+            <bind name="statusCode" type="Number" explicitly-not-bound="true" export-name="NULL">
+                <description>Response status code</description>
+            </bind>
+            <bind name="contentLength" type="Number" explicitly-not-bound="true" export-name="NULL">
+                <description>Response content length</description>
+            </bind>
+            <bind name="headers" type="Properties" explicitly-not-bound="true" export-name="NULL">
+                <description>Response headers</description>
+            </bind>
+            <bind name="contentAsString" type="String" explicitly-not-bound="true" export-name="NULL">
+                <description>Response content as string</description>
+            </bind>
+        </out-binding>
+
+        <position x="764.5" y="55.40909090909091"/>
+    </workflow-item>
+
+    <workflow-item name="item4" out-name="item3" type="task" script-module="org.lostroncos.library.netscaler.multihost/generateNSRestContent">
+        <display-name>generateNSRestContent</display-name>
+
+        <script encoded="false">
+//Auto generated script, cannot be modified !
+actionResult = System.getModule("org.lostroncos.library.netscaler.multihost").generateNSRestContent(nsResourceName) ;
+        </script>
+
+        <in-binding>
+            <bind name="nsResourceName" type="string" export-name="nsResourceName">
+                <description>Netscaler resource type</description>
+            </bind>
+        </in-binding>
+
+        <out-binding>
+            <bind name="actionResult" type="string" export-name="nsRestContent"/>
+        </out-binding>
+
+        <description>Queries all input parameters with value from workflow and generates JSON formated REST content from them.</description>
+
+        <position x="624.5" y="55.40909090909091"/>
+    </workflow-item>
+
+    <workflow-item name="item5" out-name="item4" type="task">
+        <display-name>Convert boolean inputs to string</display-name>
+
+        <script encoded="false">
+if (nsSSL2 === true)
+	ssl2 = "ENABLED";
+else
+	ssl2 = "DISABLED";
+	
+if (nsSSL3 === true)
+	ssl3 = "ENABLED";
+else
+	ssl3 = "DISABLED";
+	
+if (nsTLS1 === true)
+	tls1 = "ENABLED";
+else
+	tls1 = "DISABLED";
+	
+if (nsTLS11 === true)
+	tls11 = "ENABLED";
+else
+	tls11 = "DISABLED";
+	
+if (nsTLS12 === true)
+	tls12 = "ENABLED";
+else
+	tls12 = "DISABLED";
+        </script>
+
+        <in-binding>
+            <bind name="nsSSL2" type="boolean" export-name="nsSSL2"/>
+            <bind name="nsSSL3" type="boolean" export-name="nsSSL3"/>
+            <bind name="nsTLS1" type="boolean" export-name="nsTLS1"/>
+            <bind name="nsTLS11" type="boolean" export-name="nsTLS11"/>
+            <bind name="nsTLS12" type="boolean" export-name="nsTLS12"/>
+        </in-binding>
+
+        <out-binding>
+            <bind name="ssl2" type="string" export-name="ssl2"/>
+            <bind name="ssl3" type="string" export-name="ssl3"/>
+            <bind name="tls1" type="string" export-name="tls1"/>
+            <bind name="tls11" type="string" export-name="tls11"/>
+            <bind name="tls12" type="string" export-name="tls12"/>
+        </out-binding>
+
+        <position x="484.5" y="55.40909090909091"/>
+    </workflow-item>
+
+    <presentation>
+        <p-param name="nsRestHostName">
+            <desc>Netscaler Name</desc>
+            <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
+            <p-qual kind="static" name="defaultValue" type="string">nsSandbox</p-qual>
+        </p-param>
+        <p-param name="servicename">
+            <desc>Service Name</desc>
+            <p-qual kind="static" name="mandatory" type="boolean">true</p-qual>
+            <p-qual kind="ognl" name="linkedEnumeration" type="Array/string">GetAction("org.lostroncos.library.netscaler.multihost","getNSResourcesByResourceName").call( #nsRestHostName , "service" , "name" , "" )</p-qual>
+        </p-param>
+        <p-param name="nsSSL2">
+            <desc>SSLv2</desc>
+            <p-qual kind="static" name="defaultValue" type="boolean">__NULL__</p-qual>
+        </p-param>
+        <p-param name="nsSSL3">
+            <desc>SSLv3</desc>
+            <p-qual kind="static" name="defaultValue" type="boolean">__NULL__</p-qual>
+        </p-param>
+        <p-param name="nsTLS1">
+            <desc>TLSv1</desc>
+            <p-qual kind="static" name="defaultValue" type="boolean">true</p-qual>
+        </p-param>
+        <p-param name="nsTLS11">
+            <desc>TLSv11</desc>
+            <p-qual kind="static" name="defaultValue" type="boolean">true</p-qual>
+        </p-param>
+        <p-param name="nsTLS12">
+            <desc>TLSv12</desc>
+            <p-qual kind="static" name="defaultValue" type="boolean">__NULL__</p-qual>
+        </p-param>
+    </presentation>
+</workflow>
